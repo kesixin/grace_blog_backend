@@ -99,9 +99,13 @@ class ArticleController extends Controller
      */
     public function miniIndex()
     {
+        $config = array();
+        $config['appid'] = Auth::user()->appid;
+        $config['restkey'] = Auth::user()->restkey;
+        $config['masterkey'] = Auth::user()->masterkey;
         $result = $this->BmobObj->get("", array('keys=author,title,read_counts,createdAt,objectId', 'order=-createdAt'));
         $articles = $result->results;
-        return view('backend.article.mini_index', compact('articles'));
+        return view('backend.article.mini_index', compact('articles','config'));
     }
 
     /**

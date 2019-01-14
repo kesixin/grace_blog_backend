@@ -51,7 +51,7 @@
                                     <td>
                                         <a href='{{ route("backend.article.mini-edit", ["id" => $value->objectId]) }}' class='btn btn-info btn-xs'>
                                             <i class="fa fa-pencil"></i> 修改</a>
-                                        <a data-href='{{ route("backend.article.mini-destroy", ["id" => $value->objectId]) }}'
+                                        <a data-href='{{ route("backend.article.mini-destroy", ["id" => $value->objectId]) }}' data-id="{{$value->objectId}}"
                                            class='btn btn-danger btn-xs article-delete'><i class="fa fa-trash-o"></i> 删除</a>
                                     </td>
                                 </tr>
@@ -69,8 +69,18 @@
 @endsection
 
 @section('javascript')
+    <script src="{{ asset('js/Bmob-1.6.5.min.js') }}"></script>
     <script>
         $(function() {
+            Bmob.initialize("{{ $config['appid'] }}", "{{ $config['restkey'] }}");
+            var id = $(this).attr('data-id');
+            var query = Bmob.Query('collect')
+            query.equalTo('article','==',id)
+            query.find().then(todos => {
+                todos.destroyAll().then(res => {
+                    console.log(res)
+                })
+            })
             $(".article-delete").click(function(){
                 var url = $(this).attr('data-href');
                 Moell.ajax.delete(url);
